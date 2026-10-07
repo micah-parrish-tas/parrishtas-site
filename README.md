@@ -39,27 +39,15 @@ npm run build
 npm run preview   # optional: serve dist/
 ```
 
-Output lands in `dist/`. A production build with `BASE_PATH` unset uses `/parrishtas-site/` so assets and internal links match the GitHub Pages project URL. Set `BASE_PATH=/` to build for the site root.
+Output lands in `dist/`. Production builds default to base `/`, the same as local dev, so assets and internal links are root-relative for [https://parrishtas.com/](https://parrishtas.com/). Set `BASE_PATH` only if you need a different public path.
 
 ## GitHub Pages
 
 `.github/workflows/pages.yml` builds the site and deploys `dist/` on every push to `main`, and when the workflow is run manually. It uses the official Pages actions: `configure-pages`, `upload-pages-artifact`, and `deploy-pages`.
 
-The first public URL is [https://micah-parrish-tas.github.io/parrishtas-site/](https://micah-parrish-tas.github.io/parrishtas-site/). Vite `base` comes from the `BASE_PATH` environment variable in that workflow (`vite.config.js`). That value is applied to bundled assets, public files, and internal page links.
+The site is served at [https://parrishtas.com/](https://parrishtas.com/). The workflow sets `BASE_PATH: /`, and `vite.config.js` uses that same root default for production builds. Bundled assets, public files, and internal page links stay at the site root.
 
-**Switch to [https://parrishtas.com/](https://parrishtas.com/) (site root):** in `.github/workflows/pages.yml`, change
-
-```yaml
-BASE_PATH: /parrishtas-site/
-```
-
-to
-
-```yaml
-BASE_PATH: /
-```
-
-There is no `CNAME` file in this repo. Turn on Pages (source: GitHub Actions) and add the custom domain in the repository settings after board approval. Do not change DNS from this repository.
+`public/robots.txt` and `public/sitemap.xml` already use `https://parrishtas.com/` URLs. There is no `CNAME` file. Actions-based Pages uses the custom domain configured in the repository settings.
 
 ## Domain / DNS (later)
 

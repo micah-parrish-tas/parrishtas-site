@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 
-// GitHub Pages project path. `npm run dev` stays at `/` unless BASE_PATH is set.
-// Production builds use this path. Set BASE_PATH=/ to publish at https://parrishtas.com/.
-const PROJECT_BASE = '/parrishtas-site/'
+// https://parrishtas.com/ is served from the site root. Dev and production both
+// default to `/`. Set BASE_PATH to override (for example a project-pages subpath).
+const PROJECT_BASE = '/'
 
 function normalizeBase(value) {
   const trimmed = String(value).trim()
@@ -16,9 +16,8 @@ function normalizeBase(value) {
   return withLeading.endsWith('/') ? withLeading : `${withLeading}/`
 }
 
-function resolveBase(command, isPreview) {
+function resolveBase() {
   if (process.env.BASE_PATH !== undefined) return normalizeBase(process.env.BASE_PATH)
-  if (command === 'serve' && !isPreview) return '/'
   return PROJECT_BASE
 }
 
@@ -43,8 +42,8 @@ function prefixSiteLinks(base) {
   }
 }
 
-export default defineConfig(({ command, isPreview }) => {
-  const base = resolveBase(command, isPreview)
+export default defineConfig(() => {
+  const base = resolveBase()
 
   return {
     base,
