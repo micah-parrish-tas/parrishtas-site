@@ -10,49 +10,26 @@ if (toggle && menu) {
   })
 }
 
-const form = document.getElementById('rfp-form')
-const success = document.getElementById('form-success')
+function readField(form, name) {
+  const el = form.elements.namedItem(name)
+  if (!el || !('value' in el)) return ''
+  return String(el.value).trim()
+}
 
-if (form && success) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault()
+function bindMailtoForm(formId, buildMessage) {
+  const form = document.getElementById(formId)
+  const success = document.getElementById('form-success')
+  if (!form || !success) return
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
 
     if (!form.checkValidity()) {
       form.reportValidity()
       return
     }
 
-    const name = form.name.value.trim()
-    const organization = form.organization.value.trim()
-    const email = form.email.value.trim()
-    const message = form.message.value.trim()
-    const role = form.role ? form.role.value.trim() : ''
-    const jd = form.jd ? form.jd.value.trim() : ''
-    const boardMeetings = form.board_meetings ? form.board_meetings.value.trim() : ''
-    const events = form.events ? form.events.value.trim() : ''
-    const ams = form.ams ? form.ams.value.trim() : ''
-    const financePartners = form.finance_partners ? form.finance_partners.value.trim() : ''
-
-    const subject = `RFP / proposal request: ${organization}`
-    const body = [
-      `Name: ${name}`,
-      `Organization: ${organization}`,
-      role ? `Role: ${role}` : null,
-      `Email: ${email}`,
-      boardMeetings ? `Board meetings / year: ${boardMeetings}` : null,
-      events ? `In-person vs virtual events: ${events}` : null,
-      ams ? `AMS / CRM: ${ams}` : null,
-      financePartners ? `Bookkeeper / CPA engaged: ${financePartners}` : null,
-      '',
-      jd ? 'Role scope / JD:' : null,
-      jd || null,
-      jd ? '' : null,
-      'Message / RFP notes:',
-      message,
-    ]
-      .filter((line) => line !== null)
-      .join('\n')
-
+    const { subject, body } = buildMessage(form)
     const mailto = `mailto:micah@parrishtas.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     window.location.href = mailto
 
@@ -61,3 +38,57 @@ if (form && success) {
     success.focus()
   })
 }
+
+bindMailtoForm('contact-form', (form) => {
+  const name = readField(form, 'name')
+  const organization = readField(form, 'organization')
+  const email = readField(form, 'email')
+  const message = readField(form, 'message')
+
+  return {
+    subject: `Website message: ${organization}`,
+    body: [
+      `Name: ${name}`,
+      `Organization: ${organization}`,
+      `Email: ${email}`,
+      '',
+      'Message:',
+      message,
+    ].join('\n'),
+  }
+})
+
+bindMailtoForm('rfp-form', (form) => {
+  const name = readField(form, 'name')
+  const organization = readField(form, 'organization')
+  const title = readField(form, 'job_title')
+  const email = readField(form, 'email')
+  const services = readField(form, 'services')
+  const members = readField(form, 'members')
+  const boardMeetings = readField(form, 'board_meetings')
+  const events = readField(form, 'events')
+  const database = readField(form, 'database')
+  const deadline = readField(form, 'deadline')
+  const message = readField(form, 'message')
+
+  return {
+    subject: `Proposal request: ${organization}`,
+    body: [
+      `Name: ${name}`,
+      `Organization: ${organization}`,
+      title ? `Title: ${title}` : null,
+      `Email: ${email}`,
+      services ? `Services of interest: ${services}` : null,
+      members ? `Number of members: ${members}` : null,
+      boardMeetings ? `Board meetings per year: ${boardMeetings}` : null,
+      events ? `Events per year: ${events}` : null,
+      database ? `Current member database or software: ${database}` : null,
+      deadline ? `Proposal deadline: ${deadline}` : null,
+      '',
+      'Message:',
+      message,
+    ]
+      .filter((line) => line !== null)
+      .join('\n'),
+  }
+})

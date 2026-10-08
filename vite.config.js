@@ -21,6 +21,16 @@ function resolveBase() {
   return PROJECT_BASE
 }
 
+function stampBuildYear() {
+  const year = String(new Date().getFullYear())
+  return {
+    name: 'stamp-build-year',
+    transformIndexHtml(html) {
+      return html.replaceAll('__YEAR__', year)
+    },
+  }
+}
+
 // Vite rewrites bundled assets and public files for `base`, but not page links.
 function prefixSiteLinks(base) {
   return {
@@ -29,14 +39,24 @@ function prefixSiteLinks(base) {
       order: 'post',
       handler(html) {
         if (!base || base === '/') return html
-        return html.replace(
-          /(\s(?:href|src)=["'])(\/(?!\/)[^"']*)(["'])/g,
-          (full, pre, url, post) => {
-            if (url === base || url.startsWith(base)) return full
-            if (url === '/') return `${pre}${base}${post}`
-            return `${pre}${base}${url.slice(1)}${post}`
-          },
-        )
+        const rewriteUrl = (url) => {
+          if (url === base || url.startsWith(base)) return url
+          if (url === '/') return base
+          return `${base}${url.slice(1)}`
+        }
+        return html
+          .replace(
+            /(\s(?:href|src)=["'])(\/(?!\/)[^"']*)(["'])/g,
+            (full, pre, url, post) => `${pre}${rewriteUrl(url)}${post}`,
+          )
+          .replace(
+            /(content=["']0;\s*url=)(\/(?!\/)[^"']*)(["'])/g,
+            (full, pre, url, post) => `${pre}${rewriteUrl(url)}${post}`,
+          )
+          .replace(
+            /(location\.replace\(["'])(\/(?!\/)[^"']*)(["']\))/g,
+            (full, pre, url, post) => `${pre}${rewriteUrl(url)}${post}`,
+          )
       },
     },
   }
@@ -47,7 +67,7 @@ export default defineConfig(() => {
 
   return {
     base,
-    plugins: [tailwindcss(), prefixSiteLinks(base)],
+    plugins: [tailwindcss(), stampBuildYear(), prefixSiteLinks(base)],
     server: {
       host: '127.0.0.1',
       port: 5173,
@@ -57,11 +77,14 @@ export default defineConfig(() => {
       rollupOptions: {
         input: {
           main: resolve(root, 'index.html'),
-          howWeWork: resolve(root, 'how-we-work.html'),
           services: resolve(root, 'services.html'),
           executiveDirector: resolve(root, 'executive-director.html'),
+          howItWorks: resolve(root, 'how-it-works.html'),
+          whoWeServe: resolve(root, 'who-we-serve.html'),
           about: resolve(root, 'about.html'),
           contact: resolve(root, 'contact.html'),
+          requestAProposal: resolve(root, 'request-a-proposal.html'),
+          howWeWork: resolve(root, 'how-we-work.html'),
         },
       },
     },

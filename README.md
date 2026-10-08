@@ -1,6 +1,6 @@
-# Parrish TAS Marketing Site
+# Parrish TAS
 
-Mobile-first marketing site for **Parrish TAS**, an outsourced Association Manager / AMC and executive director services partner. Parrish TAS is the association’s professional home office so volunteer boards focus on mission.
+Marketing site for **Parrish TAS**, an association management company. Parrish TAS provides full-service and à la carte management and executive director services for associations, societies, certification boards, and foundations.
 
 **Production domain:** [parrishtas.com](https://parrishtas.com)
 
@@ -8,18 +8,21 @@ Mobile-first marketing site for **Parrish TAS**, an outsourced Association Manag
 
 - Vite (multi-page)
 - Tailwind CSS v4
-- Plain HTML + light JS (mobile nav, contact form → mailto)
+- Plain HTML + light JS (mobile nav, forms open a mailto to micah@parrishtas.com)
 
 ## Pages
 
 | Path | Purpose |
 |------|---------|
-| `/` (`index.html`) | Home: Association Manager value prop, staffing model, TPC proof, capabilities, CTA |
-| `/how-we-work.html` | What is an AMC / full management vs à la carte vs embedded ED |
-| `/services.html` | JD-mapped Association Manager lanes; full management and à la carte |
-| `/executive-director.html` | ED services: embedded ED vs supporting a sitting ED |
-| `/about.html` | Team + credibility |
-| `/contact.html` | Contact / RFP (mailto micah@parrishtas.com); 2-business-day response note |
+| `/` (`index.html`) | Home |
+| `/services.html` | Full-service and à la carte association management |
+| `/executive-director.html` | Outsourced executive director, or support for a current executive director |
+| `/how-it-works.html` | Process, day-to-day management, what an AMC is, and FAQ |
+| `/who-we-serve.html` | Trade associations, professional societies, certification boards, and foundations |
+| `/about.html` | Story, values, and team |
+| `/contact.html` | Contact form |
+| `/request-a-proposal.html` | Proposal request form |
+| `/how-we-work.html` | Redirects to `/how-it-works.html` |
 
 ## Preview locally
 
@@ -39,7 +42,7 @@ npm run build
 npm run preview   # optional: serve dist/
 ```
 
-Output lands in `dist/`. Production builds default to base `/`, the same as local dev, so assets and internal links are root-relative for [https://parrishtas.com/](https://parrishtas.com/). Set `BASE_PATH` only if you need a different public path.
+Output lands in `dist/`. Production builds default to base `/`, the same as local dev, so assets and internal links are root-relative for [https://parrishtas.com/](https://parrishtas.com/). Set `BASE_PATH` only if you need a different public path. The copyright year is stamped at build time.
 
 ## GitHub Pages
 
@@ -49,25 +52,10 @@ The site is served at [https://parrishtas.com/](https://parrishtas.com/). The wo
 
 `public/robots.txt` and `public/sitemap.xml` already use `https://parrishtas.com/` URLs. There is no `CNAME` file. Actions-based Pages uses the custom domain configured in the repository settings.
 
-## Domain / DNS (later)
-
-`parrishtas.com` is wired in the site as:
-
-- Canonical URLs and Open Graph tags (`https://parrishtas.com/...`)
-- Footer link + `mailto:micah@parrishtas.com` (RFP / public contact)
-- `public/robots.txt` + `public/sitemap.xml`
-
-When you publish:
-
-1. Deploy `dist/` to your host.
-2. Point `parrishtas.com` (and ideally `www`) DNS to that host (A/AAAA or CNAME per provider docs).
-3. Enable HTTPS on the host.
-
 ## Brand notes
 
 - Primary accent: sky blue `#4dabf7` (from logo)
 - Logo: `public/logo.jpg`
 - No invented testimonials, client names, or metrics
-- Primary CTA: **Request a proposal**
-- Positioning: Association Manager / AMC / ED professional home office for trade associations
-- Copy style: ASE STE100 (short sentences, consistent terms, positive framing)
+- Primary CTA: **Request a Proposal**
+- Membership line, used exactly: **Member, AMC Institute**
